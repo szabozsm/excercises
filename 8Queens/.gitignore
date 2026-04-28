@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build outputs (Commonly dist, build, or out)
+dist/
+build/
+out/
+
+# TypeScript-specific
+*.tsbuildinfo
+*.js.map
+
+# Compiled JavaScript (Only if you compile .ts to .js in the same folders)
+# Note: Be careful if you have manual .js files you want to keep
+# *.js
+# !jest.config.js  # Example: exclude specific JS config files
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE / Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing / Coverage
+coverage/
