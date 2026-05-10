@@ -1,0 +1,32 @@
+{
+  "name": "ts_tsoa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon --exec ts-node src/server.ts",
+    "start": "node dist/server.js",
+    "tsoa": "tsoa spec-and-routes",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.2",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14",
+    "reflect-metadata": "^0.2.2",
+    "swagger-ui-express": "^5.0.1",
+    "ts-node": "^10.9.2",
+    "tsoa": "^7.0.0-alpha.0",
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@tsoa/cli": "^7.0.0-alpha.0",
+    "@types/swagger-ui-express": "^4.1.8"
+  }
+}
