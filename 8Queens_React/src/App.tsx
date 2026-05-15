@@ -6,64 +6,76 @@ function App() {
   const [solutionCounter, setSolutionCounter] = useState<number>(0);
   const [tables, setTables] = useState<number[][]>([]);
   const [selectedSolution, setSelectedSolution] = useState<number>(-1);
+  const [hoveredQueen, setHoveredQueen] = useState<number>(-1);
 
-function EightQueens(table: number[]) {
+  function isUnderAttack(row: number, col: number, queenRow: number): boolean {
+    const queenCol = tables[selectedSolution][queenRow];
+    // Same row
+    if (row === queenRow) return true;
+    // Same column
+    if (col === queenCol) return true;
+    // Same diagonal
+    if (Math.abs(row - queenRow) === Math.abs(col - queenCol)) return true;
+    return false;
+  }
+
+  function EightQueens(table: number[]) {
 
     const y = table.length;
-    
-       
+
+
     if (y == 8) {
-        if (TableIsValid(table)) {
-            setTables(prev => [...prev, table]);
-       
-            setSolutionCounter(prev => prev + 1);
-        }
-        return;
+      if (TableIsValid(table)) {
+        setTables(prev => [...prev, table]);
+
+        setSolutionCounter(prev => prev + 1);
+      }
+      return;
     }
 
     for (let x: number = 0; x < 8; x++) {
-        if (!table.includes(x)) {
-            EightQueens([...table, x]);
-        }
+      if (!table.includes(x)) {
+        EightQueens([...table, x]);
+      }
     }
-}
+  }
 
-function TableIsValid(table: number[]): boolean {
+  function TableIsValid(table: number[]): boolean {
     for (let x1: number = 0; x1 < 8; x1++) {
-        {
-            for (let x2: number = x1+1; x2 < 8; x2++) {
-                if (Math.abs(table[x1] - table[x2]) == Math.abs(x1 - x2))
-                    return false;
-
-            }
+      {
+        for (let x2: number = x1 + 1; x2 < 8; x2++) {
+          if (Math.abs(table[x1] - table[x2]) == Math.abs(x1 - x2))
+            return false;
 
         }
+
+      }
 
     }
     return true;
-}
+  }
 
 
   return (
     <>
       <section id="center">
         <div className="solution-counter">
-          
+
         </div>
-     
+
         <button
           type="button"
           className="counter"
-          onClick={() => {setSolutionCounter(0); setTables([]); setSelectedSolution(-1); EightQueens([])}}
+          onClick={() => { setSolutionCounter(0); setTables([]); setSelectedSolution(-1); EightQueens([]) }}
         >
           Place Queens
         </button>
-     
 
-<div className="solution-counter">
+
+        <div className="solution-counter">
           Solutions: {solutionCounter}
         </div>
-           <div>
+        <div>
           {tables.length > 0 && (
             <div>
               <h3>Solutions:</h3>
@@ -82,15 +94,33 @@ function TableIsValid(table: number[]): boolean {
           )}
         </div>
 
-           {selectedSolution >= 0 && selectedSolution < tables.length && (
+        {selectedSolution >= 0 && selectedSolution < tables.length && (
           <div className="chess-board">
             {Array.from({ length: 8 }, (_, row) => (
               <div key={row} className="row">
-                {Array.from({ length: 8 }, (_, col) => (
-                  <div key={col} className={`square ${(row + col) % 2 === 0 ? 'white' : 'black'}`} style={{ color: (row + col) % 2 === 0 ? 'black' : 'white' }}>
-                    {tables[selectedSolution][row] === col && '♛'}
-                  </div>
-                ))}
+                {Array.from({ length: 8 }, (_, col) => {
+                  const hasQueen = tables[selectedSolution][row] === col;
+                  const isAttacked = hoveredQueen >= 0 && isUnderAttack(row, col, hoveredQueen);
+                  const baseIsWhite = (row + col) % 2 === 0;
+                  const backgroundColor = isAttacked ? (baseIsWhite ? '#f0b5b5' : '#b56363') : (baseIsWhite ? '#f0d9b5' : '#b58863');
+                  const textColor = isAttacked ? (baseIsWhite ? 'black' : 'black') : (baseIsWhite ? 'black' : 'black');
+
+                  return (
+                    <div
+                      key={col}
+                      className={`square ${baseIsWhite}`}
+                      style={{
+                        backgroundColor,
+                        color: textColor,
+                        cursor: hasQueen ? 'pointer' : 'default'
+                      }}
+                      onMouseEnter={() => hasQueen && setHoveredQueen(row)}
+                      onMouseLeave={() => setHoveredQueen(-1)}
+                    >
+                      {hasQueen && '♛'}
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -98,7 +128,7 @@ function TableIsValid(table: number[]): boolean {
 
       </section>
 
-  
+
       <section id="spacer"></section>
     </>
   )
