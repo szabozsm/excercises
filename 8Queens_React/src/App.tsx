@@ -2,31 +2,10 @@ import { useState } from 'react'
 
 import './App.css'
 
-
-type Board = string[][];
-
 function App() {
   const [solutionCounter, setSolutionCounter] = useState<number>(0);
-  const [board, setBoard] = useState<Board>(Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => '' as string)))
-
-   
-
-function tableToBoard(table: number[]) 
-{
-  
-   setBoard(() => {
-    const newBoard = Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => '' as string));//prev.map(row => [...row]); 
-  for (let x: number = 0; x < 8; x++) 
-        {
-          if (table[x] !==-1)
-          newBoard[x][table[x]] = 'Q'; 
-        }
-
-    
-    return newBoard; 
-  })
-
-}
+  const [tables, setTables] = useState<number[][]>([]);
+  const [selectedSolution, setSelectedSolution] = useState<number>(-1);
 
 function EightQueens(table: number[]) {
 
@@ -34,12 +13,8 @@ function EightQueens(table: number[]) {
     
        
     if (y == 8) {
-  //          setTimeout(() => {
-  //   tableToBoard(table);
-  // }, 500); // Delays the update by 500ms  
-
         if (TableIsValid(table)) {
-            tableToBoard(table);
+            setTables(prev => [...prev, table]);
        
             setSolutionCounter(prev => prev + 1);
         }
@@ -72,29 +47,55 @@ function TableIsValid(table: number[]): boolean {
   return (
     <>
       <section id="center">
-        
-        <div className="chess-board">
-          {Array.from({ length: 8 }, (_, row) => (
-            <div key={row} className="row">
-              {Array.from({ length: 8 }, (_, col) => (
-                <div key={col} className={`square ${(row + col) % 2 === 0 ? 'white' : 'black'}`} style={{ color: (row + col) % 2 === 0 ? 'black' : 'white' }}>
-                  {board[row][col] === 'Q' && '♛'}
-                </div>
-              ))}
-            </div>
-          ))}
+        <div className="solution-counter">
+          
         </div>
+     
+        <button
+          type="button"
+          className="counter"
+          onClick={() => {setSolutionCounter(0); setTables([]); setSelectedSolution(-1); EightQueens([])}}
+        >
+          Place Queens
+        </button>
+     
 
 <div className="solution-counter">
           Solutions: {solutionCounter}
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => {setSolutionCounter(0); EightQueens([])}}
-        >
-          Place Queen
-        </button>
+           <div>
+          {tables.length > 0 && (
+            <div>
+              <h3>Solutions:</h3>
+              <div className="solution-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: '5px' }}>
+                {tables.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`solution-button ${selectedSolution === index ? 'active' : ''}`}
+                    onClick={() => setSelectedSolution(index)}
+                  >
+                    Solution {index + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+           {selectedSolution >= 0 && selectedSolution < tables.length && (
+          <div className="chess-board">
+            {Array.from({ length: 8 }, (_, row) => (
+              <div key={row} className="row">
+                {Array.from({ length: 8 }, (_, col) => (
+                  <div key={col} className={`square ${(row + col) % 2 === 0 ? 'white' : 'black'}`} style={{ color: (row + col) % 2 === 0 ? 'black' : 'white' }}>
+                    {tables[selectedSolution][row] === col && '♛'}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
       </section>
 
   
