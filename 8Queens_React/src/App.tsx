@@ -2,14 +2,14 @@ import { useState } from 'react'
 
 import './App.css'
 
-function App() {
+function App(): JSX.Element {
   const [solutionCounter, setSolutionCounter] = useState<number>(0);
   const [tables, setTables] = useState<number[][]>([]);
   const [selectedSolution, setSelectedSolution] = useState<number>(-1);
   const [hoveredQueen, setHoveredQueen] = useState<number>(-1);
 
   function isUnderAttack(row: number, col: number, queenRow: number): boolean {
-    const queenCol = tables[selectedSolution][queenRow];
+    const queenCol: number = tables[selectedSolution][queenRow];
     // Same row
     if (row === queenRow) return true;
     // Same column
@@ -19,16 +19,16 @@ function App() {
     return false;
   }
 
-  function EightQueens(table: number[]) {
+  function EightQueens(table: number[]): void {
 
-    const y = table.length;
+    const y: number = table.length;
 
 
-    if (y == 8) {
+    if (y === 8) {
       if (TableIsValid(table)) {
-        setTables(prev => [...prev, table]);
+        setTables((prev: number[][]) => [...prev, table]);
 
-        setSolutionCounter(prev => prev + 1);
+        setSolutionCounter((prev: number): number => prev + 1);
       }
       return;
     }
@@ -80,7 +80,7 @@ function App() {
             <div>
               <h3>Solutions:</h3>
               <div className="solution-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: '5px' }}>
-                {tables.map((_, index) => (
+                {tables.map((_: number[], index: number) => (
                   <button
                     key={index}
                     className={`solution-button ${selectedSolution === index ? 'active' : ''}`}
@@ -96,14 +96,14 @@ function App() {
 
         {selectedSolution >= 0 && selectedSolution < tables.length && (
           <div className="chess-board">
-            {Array.from({ length: 8 }, (_, row) => (
+            {Array.from({ length: 8 }, (_: unknown, row: number) => (
               <div key={row} className="row">
-                {Array.from({ length: 8 }, (_, col) => {
-                  const hasQueen = tables[selectedSolution][row] === col;
-                  const isAttacked = hoveredQueen >= 0 && isUnderAttack(row, col, hoveredQueen);
-                  const baseIsWhite = (row + col) % 2 === 0;
-                  const backgroundColor = isAttacked ? (baseIsWhite ? '#f0b5b5' : '#b56363') : (baseIsWhite ? '#f0d9b5' : '#b58863');
-                  const textColor = isAttacked ? (baseIsWhite ? 'black' : 'black') : (baseIsWhite ? 'black' : 'black');
+                {Array.from({ length: 8 }, (_: unknown, col: number) => {
+                  const hasQueen: boolean = tables[selectedSolution][row] === col;
+                  const isAttacked: boolean = hoveredQueen >= 0 && isUnderAttack(row, col, hoveredQueen);
+                  const baseIsWhite: boolean = (row + col) % 2 === 0;
+                  const backgroundColor: string = isAttacked ? (baseIsWhite ? '#f0b5b5' : '#b56363') : (baseIsWhite ? '#f0d9b5' : '#b58863');
+                  const textColor: string = isAttacked ? (baseIsWhite ? 'black' : 'black') : (baseIsWhite ? 'black' : 'black');
 
                   return (
                     <div
